@@ -58,6 +58,8 @@ body {
 .movie-card-title {
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
   width: 90%;
   height: 15%;
   margin-top: -10%;

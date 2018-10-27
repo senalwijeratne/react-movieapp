@@ -26,7 +26,7 @@ class SearchBox extends React.Component {
           className="search-box"
           type="text"
           name="searchTerm"
-          placeholder="search something"
+          placeholder="search for a movie"
           value={this.state.searchTerm}
           onChange={this.handleTextChange}
         />
