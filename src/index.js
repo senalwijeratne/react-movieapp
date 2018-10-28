@@ -68,33 +68,19 @@ class MovieList extends React.Component {
     if (this.state.popularIsLoaded) {
       return (
         <div className="movie-section">
-          <div className="movie-card animated zoomIn">
-            <img
-              className="movie-card-image"
-              src={`${this.props.imageBaseURL + this.props.backdropSize + this.state.popularMovieData[0].backdrop_path}`}
-              alt="hero of the movie"
-            />
-            <div className="movie-card-title">{this.state.popularMovieData[0].title}</div>
-            <div className="movie-card-description">{this.state.popularMovieData[0].overview}</div>
-          </div>
-          <div className="movie-card animated zoomIn">
-            <img
-              className="movie-card-image"
-              src={`${this.props.imageBaseURL + this.props.backdropSize + this.state.popularMovieData[1].backdrop_path}`}
-              alt="hero of the movie"
-            />
-            <div className="movie-card-title">{this.state.popularMovieData[1].title}</div>
-            <div className="movie-card-description">{this.state.popularMovieData[1].overview}</div>
-          </div>
-          <div className="movie-card animated zoomIn">
-            <img
-              className="movie-card-image"
-              src={`${this.props.imageBaseURL + this.props.backdropSize + this.state.popularMovieData[2].backdrop_path}`}
-              alt="hero of the movie"
-            />
-            <div className="movie-card-title">{this.state.popularMovieData[2].title}</div>
-            <div className="movie-card-description">{this.state.popularMovieData[2].overview}</div>
-          </div>
+          {this.state.popularMovieData.map(moviedata => {
+            return (
+              <div className="movie-card animated zoomIn" key={moviedata.id}>
+                <img
+                  className="movie-card-image"
+                  src={`${this.props.imageBaseURL + this.props.backdropSize + moviedata.backdrop_path}`}
+                  alt="hero of the movie"
+                />
+                <div className="movie-card-title">{moviedata.title}</div>
+                <div className="movie-card-description">{moviedata.overview}</div>
+              </div>
+            )
+          })}
         </div>
       )
     } else {
