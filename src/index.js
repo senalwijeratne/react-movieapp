@@ -58,7 +58,7 @@ class MovieList extends React.Component {
       )
       .then(response => {
         this.setState({
-          popularMovieData: response.data.results.slice(0, 3),
+          popularMovieData: response.data.results.slice(0, 6),
           popularIsLoaded: true
         })
       })
