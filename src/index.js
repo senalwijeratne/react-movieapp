@@ -9,11 +9,10 @@ class SearchBox extends React.Component {
     super(props)
 
     this.state = {
-      searchTerm: props.searchTerm
+      searchTerm: ""
     }
 
     this.handleTextChange = this.handleTextChange.bind(this)
-    this.queryMovieAPI = this.queryMovieAPI.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
@@ -23,23 +22,8 @@ class SearchBox extends React.Component {
 
   handleKeyDown(evt) {
     if (evt.keyCode === 13) {
-      this.queryMovieAPI()
+      this.props.queryMovieAPI("search", this.state.searchTerm)
     }
-  }
-
-  queryMovieAPI() {
-    axios
-      .get("https://api.themoviedb.org/3/search/multi", {
-        params: {
-          api_key: "885130303f08da8840fcee905162aaac",
-          language: "en-US",
-          include_adult: "true",
-          query: `${this.state.searchTerm}`
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-      })
   }
 
   render() {
@@ -58,42 +42,15 @@ class SearchBox extends React.Component {
 }
 
 class MovieList extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isLoaded: false
-    }
-
-    this.retrivePopular = this.retrivePopular.bind(this)
-  }
-
   componentDidMount() {
-    this.retrivePopular()
-  }
-
-  retrivePopular() {
-    axios
-      .get("https://api.themoviedb.org/3/discover/movie", {
-        params: {
-          api_key: "885130303f08da8840fcee905162aaac",
-          language: "en-US",
-          sort_by: "popularity.desc"
-        }
-      })
-      .then(response => {
-        this.setState({
-          popularMovieData: response.data.results.slice(0, 6),
-          isLoaded: true
-        })
-      })
+    this.props.queryMovieAPI("popular")
   }
 
   render() {
-    if (this.state.isLoaded) {
+    if (this.props.isLoaded) {
       return (
         <div className="movie-section">
-          {this.state.popularMovieData.map(moviedata => {
+          {this.props.movieData.map(moviedata => {
             return (
               <div className="movie-card animated zoomIn" key={moviedata.id}>
                 <img
@@ -126,12 +83,14 @@ class MovieApp extends React.Component {
     super(props)
 
     this.state = {
-      searchTerm: "",
       imageBaseURL: "",
-      backdropSize: ""
+      backdropSize: "",
+      isLoaded: false,
+      movieData: ""
     }
 
     this.getConfigFromAPI = this.getConfigFromAPI.bind(this)
+    this.queryMovieAPI = this.queryMovieAPI.bind(this)
   }
 
   componentDidMount() {
@@ -151,14 +110,60 @@ class MovieApp extends React.Component {
       })
   }
 
+  queryMovieAPI(type, searchTerm) {
+    if (type === "popular") {
+      axios
+        .get("https://api.themoviedb.org/3/discover/movie", {
+          params: {
+            api_key: "885130303f08da8840fcee905162aaac",
+            language: "en-US",
+            sort_by: "popularity.desc"
+          }
+        })
+        .then(response => {
+          this.setState({
+            movieData: response.data.results.slice(0, 6),
+            isLoaded: true
+          })
+        })
+    } else if (type === "search") {
+      this.setState({
+        isLoaded: false
+      })
+      axios
+        .get("https://api.themoviedb.org/3/search/movie", {
+          params: {
+            api_key: "885130303f08da8840fcee905162aaac",
+            language: "en-US",
+            include_adult: "true",
+            query: `${searchTerm}`
+          }
+        })
+        .then(response => {
+          console.log(response.data)
+          this.setState({
+            movieData: response.data.results.slice(0, 6),
+            isLoaded: true
+          })
+        })
+    }
+  }
+
   render() {
     return (
       <div className="MovieApp">
-        <SearchBox searchTerm={this.state.searchTerm} />
+        <SearchBox
+          isLoaded={this.state.isLoaded}
+          movieData={this.state.movieData}
+          queryMovieAPI={this.queryMovieAPI}
+        />
         <h1 className="popular-heading">Popular right now</h1>
         <MovieList
           imageBaseURL={this.state.imageBaseURL}
           backdropSize={this.state.backdropSize}
+          isLoaded={this.state.isLoaded}
+          movieData={this.state.movieData}
+          queryMovieAPI={this.queryMovieAPI}
         />
       </div>
     )
