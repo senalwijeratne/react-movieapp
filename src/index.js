@@ -138,7 +138,6 @@ class MovieApp extends React.Component {
           }
         })
         .then(response => {
-          console.log(response.data)
           this.setState({
             title: `Top 6 for "${searchTerm}"`,
             movieData: response.data.results.slice(0, 6),
