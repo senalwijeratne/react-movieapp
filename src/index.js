@@ -62,7 +62,7 @@ class MovieList extends React.Component {
     super(props)
 
     this.state = {
-      popularIsLoaded: false
+      isLoaded: false
     }
 
     this.retrivePopular = this.retrivePopular.bind(this)
@@ -84,13 +84,13 @@ class MovieList extends React.Component {
       .then(response => {
         this.setState({
           popularMovieData: response.data.results.slice(0, 6),
-          popularIsLoaded: true
+          isLoaded: true
         })
       })
   }
 
   render() {
-    if (this.state.popularIsLoaded) {
+    if (this.state.isLoaded) {
       return (
         <div className="movie-section">
           {this.state.popularMovieData.map(moviedata => {
