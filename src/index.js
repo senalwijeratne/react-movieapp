@@ -51,17 +51,14 @@ class MovieList extends React.Component {
       return (
         <div className="movie-section">
           {this.props.movieData.map(moviedata => {
+            var backdropSource = moviedata.backdrop_path
+              ? `${this.props.imageBaseURL + this.props.backdropSize + moviedata.backdrop_path}`
+              : "https://uploads.codesandbox.io/uploads/user/f752eb5a-ad47-4d7b-92c4-9aaf1424ed51/U0Ek-image-not-available.jpg"
             return (
               <div className="movie-card animated zoomIn" key={moviedata.id}>
-                <img
-                  className="movie-card-image"
-                  src={`${this.props.imageBaseURL +
-                    this.props.backdropSize +
-                    moviedata.backdrop_path}`}
-                  alt="hero of the movie"
-                />
-                <div className="movie-card-title">{moviedata.title}</div>
-                <div className="movie-card-description">{moviedata.overview}</div>
+                <img className="movie-card-image" src={backdropSource} alt="hero of the movie" />
+                <div className="movie-card-title">{moviedata.title || "- not available -"}</div>
+                <div className="movie-card-description">{moviedata.overview || "- not available -"}</div>
               </div>
             )
           })}
@@ -83,6 +80,7 @@ class MovieApp extends React.Component {
     super(props)
 
     this.state = {
+      title: "Popular right now",
       imageBaseURL: "",
       backdropSize: "",
       isLoaded: false,
@@ -142,6 +140,7 @@ class MovieApp extends React.Component {
         .then(response => {
           console.log(response.data)
           this.setState({
+            title: `Top 6 for "${searchTerm}"`,
             movieData: response.data.results.slice(0, 6),
             isLoaded: true
           })
@@ -153,11 +152,12 @@ class MovieApp extends React.Component {
     return (
       <div className="MovieApp">
         <SearchBox
+          title={this.state.title}
           isLoaded={this.state.isLoaded}
           movieData={this.state.movieData}
           queryMovieAPI={this.queryMovieAPI}
         />
-        <h1 className="popular-heading">Popular right now</h1>
+        <h1 className="popular-heading">{this.state.title}</h1>
         <MovieList
           imageBaseURL={this.state.imageBaseURL}
           backdropSize={this.state.backdropSize}
