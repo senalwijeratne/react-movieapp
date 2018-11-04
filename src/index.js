@@ -1,6 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import axios from "axios"
+import { OrbitSpinner } from "react-epic-spinners"
 
 import "./styles.scss"
 
@@ -52,25 +53,30 @@ class MovieList extends React.Component {
         <div className="movie-section">
           {this.props.movieData.map(moviedata => {
             var backdropSource = moviedata.backdrop_path
-              ? `${this.props.imageBaseURL + this.props.backdropSize + moviedata.backdrop_path}`
+              ? `${this.props.imageBaseURL +
+                  this.props.backdropSize +
+                  moviedata.backdrop_path}`
               : "https://uploads.codesandbox.io/uploads/user/f752eb5a-ad47-4d7b-92c4-9aaf1424ed51/U0Ek-image-not-available.jpg"
             return (
               <div className="movie-card animated zoomIn" key={moviedata.id}>
-                <img className="movie-card-image" src={backdropSource} alt="hero of the movie" />
-                <div className="movie-card-title">{moviedata.title || "- not available -"}</div>
-                <div className="movie-card-description">{moviedata.overview || "- not available -"}</div>
+                <img
+                  className="movie-card-image"
+                  src={backdropSource}
+                  alt="hero of the movie"
+                />
+                <div className="movie-card-title">
+                  {moviedata.title || "- not available -"}
+                </div>
+                <div className="movie-card-description">
+                  {moviedata.overview || "- not available -"}
+                </div>
               </div>
             )
           })}
         </div>
       )
     } else {
-      return (
-        <div className="spinner">
-          <div className="double-bounce1" />
-          <div className="double-bounce2" />
-        </div>
-      )
+      return <OrbitSpinner color="white" className="spinner" />
     }
   }
 }
